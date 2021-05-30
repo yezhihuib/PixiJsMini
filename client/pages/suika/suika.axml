@@ -1,0 +1,15 @@
+<view class="page-game">
+  <view>
+    <text>大西瓜</text>
+  </view>
+  <view class="flex">
+    <view class="pa">
+      <button size="default" type="primary" onTap="handleGamePause">{{stopText}}</button></view>
+    <view class="pa">
+      <button size="default" type="primary" onTap="handleRestart">重新开始</button>
+    </view>
+  </view>
+  <view class="mt">
+    <pixi-canvas id="pixi-canvas" options={{appOptions}} destroyAppOnDidUnmount="true" onError="onPixiCanvasError" onDidUnmount="onPixiCanvasDidUnmount" onAppInit="onAppInit" onTouchHandle="onTouchHandle"></pixi-canvas>
+  </view>
+</view>

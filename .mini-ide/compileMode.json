@@ -1,0 +1,12 @@
+{
+  "modes": [
+    {
+      "title": "application",
+      "page": "pages/application/index"
+    },
+    {
+      "title": "大西瓜",
+      "page": "pages/suika/suika"
+    }
+  ]
+}

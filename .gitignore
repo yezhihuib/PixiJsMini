@@ -1,0 +1,11 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea
+**/.tea
+**/.kaitian
+*.iml
+**/target
+**/package-lock.json
+**/rebel.xml
+node_modules/
+logs
+**/mini.project.json

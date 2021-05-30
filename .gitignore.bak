@@ -1,0 +1,13 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea
+**/.tea
+**/.kaitian
+*.iml
+**/target
+theia-web/src/main/web/node_modules/
+**/package-lock.json
+**/rebel.xml
+node_modules/
+theia-web/src/main/resources/templates/
+logs
+**/mini.project.json
