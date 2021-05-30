@@ -4,7 +4,7 @@ import { GameRectangle, GameCircle } from "/modules/gameGraphics";
 import { circleMap, FruitCircle } from "/modules/fruitCircle";
 
 const canvasWidth = 750;
-const canvasHeight = 1200;
+const canvasHeight = 1100;
 
 const createWorldContainer = (width, height, color) => {
   const rectLeft = new GameRectangle(-20, height / 2, 40, height, { isStatic: true }, { color });
@@ -107,7 +107,8 @@ Page({
     this.addRandomCircle(300, 0);
 
     application.renderer.plugins.interaction.on("touchstart", (event) => {
-      console.log("renderer", event)
+      console.log(event);
+      this.addRandomCircle(event.data.global.x, event.data.global.y);
     })
 
     //根据物理引擎数据渲染页面
