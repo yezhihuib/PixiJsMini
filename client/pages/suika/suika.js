@@ -187,7 +187,7 @@ Page({
     this.addRandomCircle(300, 0);
   },
   addRandomCircle(x, y) {
-    const circleA = new FruitCircle(x, y, this.circleType ? this.circleType : 1);
+    const circleA = new FruitCircle(x, y, this.circleType !== undefined ? this.circleType : 1);
     this.addGraphicsToWorld([circleA]);
     this.addOrReplaceNextCircle();
   },
