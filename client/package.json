@@ -5,9 +5,11 @@
   "license": "MIT",
   "dependencies": {
     "@tbminiapp/pixi-miniprogram-engine": "^1.0.23",
-    "@types/matter-js": "^0.14.12",
-    "@types/pixi.js": "^4.7.5",
     "gsap": "^3.2.4",
     "matter-js": "^0.17.1"
+  },
+  "devDependencies": {
+    "@types/matter-js": "^0.14.12",
+    "@types/pixi.js": "^4.7.5"
   }
 }

@@ -1,10 +1,12 @@
-import { Texture, Sprite, Text, Point } from "@tbminiapp/pixi-miniprogram-engine";
+import { Texture, Sprite, Text, Point, Graphics } from "@tbminiapp/pixi-miniprogram-engine";
 import { Engine, Runner, Bodies, Composite, Events } from "matter-js";
 import { GameRectangle, GameCircle } from "/modules/gameGraphics";
 import { circleMap, FruitCircle } from "/modules/fruitCircle";
+import { DisplayGraphics } from "../../modules/displayGraphics";
 
 const canvasWidth = 750;
 const canvasHeight = 1100;
+const dropHeight = 110;
 
 const createWorldContainer = (width, height, color) => {
   const rectLeft = new GameRectangle(-20, height / 2, 40, height, { isStatic: true }, { color });
@@ -25,8 +27,7 @@ Page({
   pixiOptions: null,
   engine: null,
   graphicsObjects: [],
-  canvasWidth: 750,
-  canvasHeight: 1200,
+
   circleType: 0,
   nextCircle: null,
 
@@ -61,13 +62,15 @@ Page({
     this.context = null;
     this.pixiApplication = null;
   },
-  addWorldBounds(items) {
+  addWorldBounds() {
+    const items = createWorldContainer(canvasWidth, canvasHeight - 40, 0x646464);
     const { stage } = this.pixiApplication;
     this.worldBounds = items;
     Composite.add(this.engine.world, items.map(item => item.body));
     items.forEach((graphics) => {
       stage.addChild(graphics.display);
-    })
+    });
+    const line = new Graphics();
   },
   addGraphicsToWorld(items) {
     const { stage } = this.pixiApplication;
@@ -75,10 +78,13 @@ Page({
     Composite.add(this.engine.world, items.map(item => item.body));
     items.forEach((graphics) => {
       stage.addChild(graphics.display);
-    })
+    });
+    const topLinePoints = [new Point(0, dropHeight), new Point(canvasWidth, dropHeight)];
+    const lines = DisplayGraphics.drawLines({ width: 2, color: 0x646464, alpha: 0.6 }, topLinePoints);
+    stage.addChild(lines);
   },
   addOrReplaceNextCircle() {
-    this.circleType = Math.floor(Math.random() * 4);
+    this.circleType = Math.floor(Math.random() * 3);
     const { stage } = this.pixiApplication;
     const { color, radius } = circleMap[this.circleType];
     if (this.nextCircle) {
@@ -101,14 +107,13 @@ Page({
     this.engine = Engine.create({
       gravity: { x: 0, y: 2 }
     });
-    const worldContainers = createWorldContainer(canvasWidth, canvasHeight - 40, 0x646464);
-    this.addWorldBounds(worldContainers);
+
+    this.addWorldBounds();
 
     this.addRandomCircle(300, 0);
 
     application.renderer.plugins.interaction.on("touchstart", (event) => {
-      console.log(event);
-      this.addRandomCircle(event.data.global.x, event.data.global.y);
+      this.addRandomCircle(event.data.global.x, dropHeight);
     })
 
     //根据物理引擎数据渲染页面
@@ -126,7 +131,7 @@ Page({
         const propertyB = pair.bodyB.property;
         if (propertyA && propertyB && !pair.bodyA.isStatic && !pair.bodyB.isStatic) {
           //合成大西瓜
-          if (propertyA.circleType === propertyB.circleType && propertyA.circleType < 5) {
+          if (propertyA.circleType === propertyB.circleType && propertyA.circleType < Object.keys(circleMap).length - 1) {
             const newX = Math.floor((propertyA.body.position.x + propertyB.body.position.x) / 2);
             const newY = Math.floor((propertyA.body.position.y + propertyB.body.position.y) / 2);
             const newFruit = new FruitCircle(newX, newY, propertyA.circleType + 1);
@@ -182,8 +187,7 @@ Page({
   handleRestart() {
     this.pixiApplication.stage.removeChildren();
     Composite.clear(this.engine.world, false);
-    const worldContainers = createWorldContainer(canvasWidth, canvasHeight - 40, 0x646464);
-    this.addWorldBounds(worldContainers);
+    this.addWorldBounds();
     this.addRandomCircle(300, 0);
   },
   addRandomCircle(x, y) {
@@ -196,7 +200,7 @@ Page({
     let point = new Point();
     if (event.touches.length > 0) {
       interaction.mapPositionToPoint(point, event.touches[0].x, event.touches[0].y);
-      this.addRandomCircle(point.x, point.y);
+      this.addRandomCircle(point.x, dropHeight);
     }
   }
 });
