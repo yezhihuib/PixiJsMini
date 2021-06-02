@@ -1,5 +1,5 @@
-import { Bodies,Composite } from "matter-js";
-import { Graphics } from "@tbminiapp/pixi-miniprogram-engine";
+import { Bodies, Composite } from "matter-js";
+import { Graphics, Sprite } from "@tbminiapp/pixi-miniprogram-engine";
 
 //弹性
 const restitution = 0.3;
@@ -76,7 +76,7 @@ export class GameCircle extends GameGraphics {
     this.style = displayStyle;
   }
 
-  modifyStyle(x, y, newRadius,newColor) {
+  modifyStyle(x, y, newRadius, newColor) {
     const color = newColor ? newColor : this.displayStyle.color;
     const radius = newRadius ? newRadius : this.radius;
     this.display.clear();
@@ -87,8 +87,46 @@ export class GameCircle extends GameGraphics {
     this.display.y = y;
   }
 
-  removeSelf(stage,world){
+  removeSelf(stage, world) {
     stage.removeChild(this.display);
-    Composite.remove(world,this.body);
+    Composite.remove(world, this.body);
+  }
+}
+
+export class GameTextureCircle extends GameGraphics {
+
+  radius;
+
+  createSprite(x, y, radius, texture) {
+    const sprite = new Sprite(texture);
+    sprite.width = radius * 2;
+    sprite.height = radius * 2;
+    sprite.anchor.x = 0.5;
+    sprite.anchor.y = 0.5;
+    sprite.x = x;
+    sprite.y = y;
+    return sprite;
+  }
+
+  constructor(x, y, radius, physicsOption, texture) {
+    super();
+    this.radius = radius;
+    const circleBody = Bodies.circle(x, y, radius, physicsOption ? { ...physicsOption } : undefined);
+    circleBody.property = this;
+    this.body = applyBodyConfig(circleBody);
+    const sprite = this.createSprite(x, y, radius, texture);
+    this.display = sprite;
+    this.texture = texture;
+  }
+
+  removeSelf(stage, world) {
+    stage.removeChild(this.display);
+    Composite.remove(world, this.body);
+  }
+
+  update() {
+    this.display.x = this.body.position.x;
+    this.display.y = this.body.position.y;
+    this.display.rotation = this.body.angle;
   }
 }

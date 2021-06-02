@@ -8,3 +8,4 @@ export const fruitPicMap = {
   7: "https://bruce-public-bucket.oss-cn-hangzhou.aliyuncs.com/game/pic/suika/7.png",
   8: "https://bruce-public-bucket.oss-cn-hangzhou.aliyuncs.com/game/pic/suika/8.png",
   9: "https://bruce-public-bucket.oss-cn-hangzhou.aliyuncs.com/game/pic/suika/9.png",
+}

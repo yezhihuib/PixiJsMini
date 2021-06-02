@@ -1,8 +1,9 @@
-import { Texture, Sprite, Text, Point, Graphics } from "@tbminiapp/pixi-miniprogram-engine";
+import { Texture, Sprite, Text, Point, Graphics, loader, resources } from "@tbminiapp/pixi-miniprogram-engine";
 import { Engine, Runner, Bodies, Composite, Events } from "matter-js";
 import { GameRectangle, GameCircle } from "/modules/gameGraphics";
 import { circleMap, FruitCircle } from "/modules/fruitCircle";
 import { DisplayGraphics } from "../../modules/displayGraphics";
+import { fruitPicMap } from "/contants/fruitPicMap";
 
 const canvasWidth = 750;
 const canvasHeight = 1100;
@@ -62,6 +63,10 @@ Page({
     this.context = null;
     this.pixiApplication = null;
   },
+  loadPicRes() {
+    loader.add(fruitPicMap[1]).add(fruitPicMap[2]).add(fruitPicMap[3]).add(fruitPicMap[4])
+      .add(fruitPicMap[5]).add(fruitPicMap[6]).add(fruitPicMap[7]).add(fruitPicMap[8]).add(fruitPicMap[9]).load(this.resLoaded.bind(this));
+  },
   addWorldBounds() {
     const items = createWorldContainer(canvasWidth, canvasHeight - 40, 0x646464);
     const { stage } = this.pixiApplication;
@@ -70,7 +75,9 @@ Page({
     items.forEach((graphics) => {
       stage.addChild(graphics.display);
     });
-    const line = new Graphics();
+    const topLinePoints = [new Point(0, dropHeight), new Point(canvasWidth, dropHeight)];
+    const lines = DisplayGraphics.drawLines({ width: 2, color: 0x646464, alpha: 0.6 }, topLinePoints);
+    stage.addChild(lines);
   },
   addGraphicsToWorld(items) {
     const { stage } = this.pixiApplication;
@@ -79,21 +86,16 @@ Page({
     items.forEach((graphics) => {
       stage.addChild(graphics.display);
     });
-    const topLinePoints = [new Point(0, dropHeight), new Point(canvasWidth, dropHeight)];
-    const lines = DisplayGraphics.drawLines({ width: 2, color: 0x646464, alpha: 0.6 }, topLinePoints);
-    stage.addChild(lines);
   },
   addOrReplaceNextCircle() {
     this.circleType = Math.floor(Math.random() * 3);
     const { stage } = this.pixiApplication;
-    const { color, radius } = circleMap[this.circleType];
+    const { radius } = circleMap[this.circleType];
     if (this.nextCircle) {
-      this.nextCircle.modifyStyle(canvasWidth / 2, radius + 10, radius, color);
-    } else {
-      const nextCircle = new GameCircle(canvasWidth / 2, radius + 10, radius, undefined, { color });
-      this.nextCircle = nextCircle;
-    }
-    this.nextCircle.display.name = "nextCircle";
+      stage.removeChild(this.nextCircle.display);
+    } 
+    const nextCircle = new FruitCircle(canvasWidth / 2, radius + 10, this.circleType);
+    this.nextCircle = nextCircle;
     stage.addChild(this.nextCircle.display);
   },
   onAppInit(e) {
@@ -103,13 +105,15 @@ Page({
     this.context = context;
     this.pixiApplication = application;
     this.pixiOptions = options;
-    const { stage } = application;
     this.engine = Engine.create({
       gravity: { x: 0, y: 2 }
     });
-
+    this.loadPicRes();
+  },
+  resLoaded() {
+    const application = this.pixiApplication
+    const { stage } = application;
     this.addWorldBounds();
-
     this.addRandomCircle(300, 0);
 
     application.renderer.plugins.interaction.on("touchstart", (event) => {
@@ -144,6 +148,7 @@ Page({
       })
     });
   },
+
   onReady() {
 
   },

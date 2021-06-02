@@ -1,7 +1,6 @@
 {
   "pages": [
-    "pages/suika/suika",
-    "pages/index/index"
+    "pages/suika/suika"
   ],
   "window": {
     "defaultTitle": "My App",

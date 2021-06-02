@@ -1,21 +1,27 @@
-import { GameCircle } from "./gameGraphics";
+import { GameCircle, GameTextureCircle } from "./gameGraphics";
+import { loader } from "@tbminiapp/pixi-miniprogram-engine";
+import { fruitPicMap } from "/contants/fruitPicMap";
 
 export const circleMap = {
-  0: { radius: 20, color: 0x333399 },
-  1: { radius: 30, color: 0xFFFF00 },
-  2: { radius: 50, color: 0x0099FF },
-  3: { radius: 80, color: 0xA0522D },
-  4: { radius: 110, color: 0x009933 },
-  5: { radius: 160, color: 0x006400 },
+  0: { radius: 20, picName: "1" },
+  1: { radius: 30, picName: "2" },
+  2: { radius: 50, picName: "3" },
+  3: { radius: 70, picName: "4" },
+  4: { radius: 90, picName: "5" },
+  5: { radius: 120, picName: "6" },
+  6: { radius: 150, picName: "7" },
+  7: { radius: 190, picName: "8" },
+  8: { radius: 190, picName: "9" },
 }
 
-export class FruitCircle extends GameCircle {
+export class FruitCircle extends GameTextureCircle {
 
   circleType;
 
   constructor(x, y, circleType) {
-    const { color, radius } = circleMap[circleType];
-    super(x, y, radius, undefined, { color });
+    const { radius, picName } = circleMap[circleType];
+    const texture = loader.resources[fruitPicMap[picName]].texture;
+    super(x, y, radius, undefined, texture);
     this.circleType = circleType;
     this.body.property = this;
   }
