@@ -93,7 +93,7 @@ Page({
     const { radius } = circleMap[this.circleType];
     if (this.nextCircle) {
       stage.removeChild(this.nextCircle.display);
-    } 
+    }
     const nextCircle = new FruitCircle(canvasWidth / 2, radius + 10, this.circleType);
     this.nextCircle = nextCircle;
     stage.addChild(this.nextCircle.display);
